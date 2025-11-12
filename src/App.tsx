@@ -1,15 +1,17 @@
-import { useState } from 'react'
+import { useState, type FormEvent } from 'react'
 import './App.css'
+import { API_ROUTES, buildUrl } from './config/services/api';
 
 type AuthMode = 'Sign In' | 'Sign Up';
 
 function App() {
+  const [name, setName] = useState("")
   const [email, setMail] = useState("")
   const [password, setPass] = useState("")
   const [authMode, setAuthMode] = useState<AuthMode>('Sign In')
   const [errorMsg, setErro] = useState("")
 
-  const sendForm = async (e: any) => {
+  const signIn = async (e: FormEvent) => {
     e.preventDefault();
 
     if (!email || !password) {
@@ -18,7 +20,7 @@ function App() {
     }
 
     try {
-      const response = await fetch("http://localhost:3000/login", {
+      const response = await fetch(buildUrl(API_ROUTES.auth.signin), {
         method: 'POST',
         headers: {
           "Content-Type": "application/json"
@@ -48,6 +50,43 @@ function App() {
     }
   }
 
+  const signUp = async (e: FormEvent) => {
+    e.preventDefault()
+
+    if (!name || !email || !password) {
+      setErro("Todas as informações precisam estar preenchidas")
+      return;
+    }
+
+    try {
+      const response = await fetch(API_ROUTES.auth.signup, {
+        method: 'POST',
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify({ name, email, password })
+      })
+
+      if (!response.ok) {
+        throw new Error(`Erro ${response.status}: Falha no cadastro`)
+      }
+
+      const data = await response.json()
+
+      console.log("Enviado!")
+
+      if (response.ok && data.success) {
+        setErro(`✅ Cadastro Efetuado com Sucesso!, ${data.user.name}`)
+      }
+
+    } catch (err: any) {
+      console.log(err)
+      setErro('Erro ao conectar ao servidor!  ')
+    }
+
+
+  }
+
   const render = () => {
     switch (authMode) {
       case 'Sign In':
@@ -64,7 +103,7 @@ function App() {
             </div>
             <div className='w-full flex flex-col gap-1.5'>
               <hr className='w-full' />
-              <button onClick={sendForm} className='p-5 hover:cursor-pointer border w-full bg-orange-400 text-white text-2xl font-bold'>Acessar</button>
+              <button onClick={signIn} className='p-5 hover:cursor-pointer border w-full bg-orange-400 text-white text-2xl font-bold'>Acessar</button>
             </div>
             <p>Não é cadastrado? <a onClick={() => setAuthMode('Sign Up')} className='font-bold text-orange-400 hover:cursor-pointer underline'>Crie sua conta</a></p>
           </form>
@@ -75,7 +114,7 @@ function App() {
             <h2 className='text-4xl'>Cadastrar Conta</h2>
             <div className='flex w-full gap-1.5 flex-col items-start justify-between'>
               <label htmlFor="" className='text-2xl w-full'> Nome</label>
-              <input type="text" placeholder='Seu nome completo' name="" id="" className='w-full text-lg focus:outline-none bg-gray-200/70 p-2.5 text-black/50' />
+              <input type="text" value={name} onChange={(e) => setName(e.target.value)} placeholder='Seu nome completo' name="" id="" className='w-full text-lg focus:outline-none bg-gray-200/70 p-2.5 text-black/50' />
             </div>
             <div className='flex w-full gap-1.5 flex-col items-start justify-between'>
               <label htmlFor="" className='text-2xl w-full'> E-mail</label>
@@ -87,7 +126,7 @@ function App() {
             </div>
             <div className='w-full flex flex-col gap-1.5'>
               <hr className='w-full' />
-              <button onClick={sendForm} className='p-5 hover:cursor-pointer border w-full bg-orange-400 text-white text-2xl font-bold'>Cadastrar</button>
+              <button onClick={signUp} className='p-5 hover:cursor-pointer border w-full bg-orange-400 text-white text-2xl font-bold'>Cadastrar</button>
             </div>
             <p>Já possui uma conta? <a onClick={() => setAuthMode('Sign In')} className='font-bold text-orange-400 hover:cursor-pointer underline'>Acesse sua conta</a></p>
           </form>
