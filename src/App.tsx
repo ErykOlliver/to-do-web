@@ -59,7 +59,7 @@ function App() {
     }
 
     try {
-      const response = await fetch(API_ROUTES.auth.signup, {
+      const response = await fetch(buildUrl(API_ROUTES.auth.signup), {
         method: 'POST',
         headers: {
           "Content-Type": "application/json"

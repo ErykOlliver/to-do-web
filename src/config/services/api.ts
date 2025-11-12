@@ -1,5 +1,5 @@
 
-const API_BASE_URL = import.meta.env.BASE_URL
+const API_BASE_URL = import.meta.env.API_BASE_URL || "http://localhost:3000"
 
 export const API_ROUTES = {
     auth: {
@@ -8,4 +8,4 @@ export const API_ROUTES = {
     }
 }
 
-export  const buildUrl = (path: string) => `${API_BASE_URL}${path}`;
+export const buildUrl = (path: string) => `${API_BASE_URL}${path}`;
