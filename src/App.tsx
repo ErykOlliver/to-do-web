@@ -8,7 +8,7 @@ function App() {
   const [name, setName] = useState("")
   const [email, setMail] = useState("")
   const [password, setPass] = useState("")
-  const [authMode, setAuthMode] = useState<AuthMode>('Sign In')
+  const [authMode, setAuthMode] = useState<AuthMode>('Sign Up')
   const [errorMsg, setErro] = useState("")
 
   const signIn = async (e: FormEvent) => {
