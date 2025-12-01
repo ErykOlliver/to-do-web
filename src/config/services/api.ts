@@ -3,8 +3,8 @@ const API_BASE_URL = import.meta.env.API_BASE_URL || "http://localhost:3000"
 
 export const API_ROUTES = {
     auth: {
-        signin: '/auth/signin',
-        signup: '/auth/signup',
+        signin: '/signin',
+        signup: '/signup',
     }
 }
 

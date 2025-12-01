@@ -1,6 +1,7 @@
 import { useState, type FormEvent } from 'react'
 import './App.css'
 import { API_ROUTES, buildUrl } from './config/services/api';
+import { useNavigate } from 'react-router';
 
 type AuthMode = 'Sign In' | 'Sign Up';
 
@@ -10,6 +11,7 @@ function App() {
   const [password, setPass] = useState("")
   const [authMode, setAuthMode] = useState<AuthMode>('Sign Up')
   const [errorMsg, setErro] = useState("")
+  const navigate = useNavigate()
 
   const signIn = async (e: FormEvent) => {
     e.preventDefault();
@@ -37,9 +39,9 @@ function App() {
       console.log("Enviado")
 
       if (response.ok && data.success) {
-        console.log("✅ Login Efetuado com Sucesso!", data)
-        setErro(`✅ Login Efetuado com Sucesso! ${data.user.email}`),
-          alert(`seja Bem vindo: ${data.token}`)
+        console.log(data.message, data)
+        setErro(data.message)
+        navigate("/hub", { replace: true })
       } else {
         setErro(data.message || 'Erro ao fazer login')
       }
@@ -91,7 +93,7 @@ function App() {
     switch (authMode) {
       case 'Sign In':
         return (
-          <form className='gap-4.5 flex flex-col bg-white border-black/40 h-fit border w-1/4 py-8 px-5 items-center justify-center' action="" method="post">
+          <form  className='gap-4.5 flex flex-col bg-white border-black/40 h-fit border w-1/4 py-8 px-5 items-center justify-center' action="" method="post">
             <h2 className='text-4xl'>Acessar Conta</h2>
             <div className='flex w-full gap-1.5 flex-col items-start justify-between'>
               <label htmlFor="" className='text-2xl w-full'> E-mail</label>
